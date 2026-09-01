@@ -1,0 +1,507 @@
+/* ==========================================================================
+   Aura Detector — Base CSS Stylesheet
+   Created for NexaSoul Web Development Foundation Bootcamp
+   ========================================================================== */
+
+/* 
+  CSS Custom Properties (Variables)
+  Students can easily modify colors, fonts, and spacing here!
+*/
+:root {
+    --primary-color: #4F46E5;       /* Main interactive color (Indigo) */
+    --primary-hover: #4338CA;       /* Darker shade for hover state */
+    --secondary-color: #0EA5E9;     /* Secondary accent color (Sky Blue) */
+    --bg-color: #F8FAFC;            /* Clean light page background */
+    --card-bg: #FFFFFF;             /* Card container background */
+    --text-dark: #0F172A;           /* Primary text color */
+    --text-muted: #64748B;          /* Secondary text color */
+    --border-color: #E2E8F0;        /* Subtle border color */
+    --accent-glow: #EEF2FF;         /* Accent highlight background */
+
+    --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --border-radius: 12px;
+    --transition-speed: 0.2s;
+}
+
+/* Base Reset & Reset Box Model */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Helper Container */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* ==========================================================================
+   Header & Navigation
+   ========================================================================== */
+.navbar {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 0;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    line-height: 1.2;
+}
+
+.logo-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.navbar nav a {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 20px;
+    transition: color var(--transition-speed);
+}
+
+.navbar nav a:hover {
+    color: var(--primary-color);
+}
+
+/* ==========================================================================
+   Shared Component Styles (Cards & Buttons)
+   ========================================================================== */
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.hero-badge-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--accent-glow);
+    padding: 4px 14px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+}
+
+.badge-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.badge {
+    color: var(--primary-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #E2E8F0;
+    color: var(--text-dark);
+}
+
+.btn-secondary:hover {
+    background-color: #CBD5E1;
+}
+
+/* ==========================================================================
+   Section 1: Hero Section
+   ========================================================================== */
+.hero-section {
+    padding: 60px 0 40px 0;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+}
+
+.hero-tagline {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 16px;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto 28px auto;
+}
+
+/* ==========================================================================
+   Section 2: About Section
+   ========================================================================== */
+.about-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.about-logo {
+    height: 36px;
+    width: auto;
+}
+
+.about-card h2 {
+    font-size: 1.4rem;
+}
+
+.about-card p {
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+/* ==========================================================================
+   Section 3: Quiz Section
+   ========================================================================== */
+.quiz-header {
+    margin-bottom: 24px;
+}
+
+#question-progress {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 8px;
+    background-color: var(--border-color);
+    border-radius: 4px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 10%;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.question-box h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.option-btn {
+    width: 100%;
+    text-align: left;
+    padding: 14px 18px;
+    background-color: #F1F5F9;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.option-btn:hover {
+    background-color: var(--accent-glow);
+    border-color: var(--primary-color);
+}
+
+.option-btn.selected {
+    background-color: var(--accent-glow);
+    border-color: var(--primary-color);
+    font-weight: 600;
+}
+
+.warning-text {
+    color: #EF4444;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.quiz-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* ==========================================================================
+   Section 4: Result Section
+   ========================================================================== */
+.result-card {
+    text-align: center;
+    padding: 40px 24px;
+}
+
+.score-display {
+    margin: 20px 0;
+}
+
+#final-score {
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+.total-score {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.aura-level-box {
+    background-color: var(--accent-glow);
+    padding: 16px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 20px;
+    min-width: 250px;
+}
+
+.level-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    display: block;
+}
+
+#aura-level-title {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin-top: 4px;
+}
+
+.aura-description {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 550px;
+    margin: 0 auto 28px auto;
+}
+
+/* ==========================================================================
+   Section 5: Educational / Challenge Section
+   ========================================================================== */
+.challenge-section {
+    padding: 20px 0 40px 0;
+}
+
+.challenge-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.challenge-header h2 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+}
+
+.challenge-intro {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.challenge-card {
+    border: 2px dashed var(--primary-color);
+    background-color: #FAFAFE;
+    text-align: center;
+}
+
+.challenge-brand-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.challenge-logo {
+    height: 48px;
+    width: auto;
+}
+
+.challenge-badge {
+    display: inline-block;
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.challenge-card h3 {
+    margin-bottom: 12px;
+}
+
+.challenge-card p {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.perks-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.perk-tag {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* ==========================================================================
+   Section 6: Footer
+   ========================================================================== */
+.footer {
+    margin-top: auto;
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    padding: 32px 0 16px 0;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-logo {
+    height: 40px;
+    width: auto;
+}
+
+.footer-brand h3 {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.footer-brand p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.footer-motto p {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Responsive Design Rules (Mobile Compatibility)
+   ========================================================================== */
+@media (max-width: 600px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+
+    .navbar .container {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .navbar nav a {
+        margin: 0 10px;
+    }
+}

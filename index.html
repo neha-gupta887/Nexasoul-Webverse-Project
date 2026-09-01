@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Detector — NexaSoul Web Dev Foundation Bootcamp</title>
+    <!-- Favicon from NexaSoul Assets -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <!-- Base stylesheet containing clean layout and styling -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="navbar">
+        <div class="container navbar-container">
+            <div class="logo">
+                <img src="assets/club-logo.svg" alt="NexaSoul Club Logo" class="logo-img">
+                <div class="logo-text">
+                    <span class="logo-brand">NexaSoul</span>
+                    <span class="logo-sub">Bootcamp Base</span>
+                </div>
+            </div>
+            <nav>
+                <a href="#about">About</a>
+                <a href="#challenge">UI/UX Challenge</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- SECTION 1: HERO / INTRODUCTION -->
+        <section class="hero-section" id="hero">
+            <div class="container hero-container">
+                <div class="hero-badge-box">
+                    <img src="assets/favicon.svg" alt="NexaSoul Symbol" class="badge-icon">
+                    <span class="badge">Gen-Z Aura Check</span>
+                </div>
+                <h1 class="hero-title">AURA DETECTOR</h1>
+                <p class="hero-tagline">"What's your aura?"</p>
+                <p class="hero-description">
+                    Answer 10 quick questions and discover your Gen-Z aura score out of 100.
+                </p>
+                <button id="start-btn" class="btn btn-primary">Start the Aura Test →</button>
+            </div>
+        </section>
+
+        <!-- SECTION 2: ABOUT THE PROJECT -->
+        <section class="about-section" id="about">
+            <div class="container">
+                <div class="card about-card">
+                    <div class="about-header">
+                        <img src="assets/club-logo.svg" alt="NexaSoul" class="about-logo">
+                        <h2>About This Base Project</h2>
+                    </div>
+                    <p>
+                        This website is the reference project for the <strong>NexaSoul Web Development Foundation Bootcamp</strong>.
+                    </p>
+                    <p>
+                        <strong>Workshop Flow:</strong> In Phase 1, students learn how to create and structure a website step-by-step using <strong>AI Tools</strong> (prompting, basic HTML5, CSS layout, and JavaScript logic). In Phase 2, students take this clean base template and compete to redesign it!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: QUIZ SECTION -->
+        <section class="quiz-section" id="quiz-container" style="display: none;">
+            <div class="container">
+                <div class="card quiz-card">
+                    <!-- Progress Bar Header -->
+                    <div class="quiz-header">
+                        <span id="question-progress">Question 1 of 10</span>
+                        <div class="progress-bar-bg">
+                            <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Container -->
+                    <div class="question-box">
+                        <h2 id="question-text">Question text will load here...</h2>
+                        <div id="options-container" class="options-container">
+                            <!-- Options dynamically rendered by script.js -->
+                        </div>
+                    </div>
+
+                    <!-- Quiz Navigation Controls -->
+                    <div class="quiz-footer">
+                        <p id="warning-msg" class="warning-text" style="display: none;">Please select an option before proceeding!</p>
+                        <button id="next-btn" class="btn btn-primary">Next Question →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: AURA RESULT SECTION -->
+        <section class="result-section" id="result-container" style="display: none;">
+            <div class="container">
+                <div class="card result-card">
+                    <span class="badge">Quiz Completed</span>
+                    <h2>Your Aura Score</h2>
+                    <div class="score-display">
+                        <span id="final-score">0</span>
+                        <span class="total-score">/ 100</span>
+                    </div>
+
+                    <div class="aura-level-box">
+                        <span class="level-label">Aura Level</span>
+                        <h3 id="aura-level-title">🔥 PRO AURA</h3>
+                    </div>
+
+                    <p id="aura-level-desc" class="aura-description">
+                        Result description will load here...
+                    </p>
+
+                    <button id="retry-btn" class="btn btn-secondary">Try Again 🔄</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: EDUCATIONAL / COMPETITION INFORMATION -->
+        <section class="challenge-section" id="challenge">
+            <div class="container">
+                <div class="challenge-header">
+                    <h2>Built to Learn. Made to Improve.</h2>
+                    <p class="challenge-intro">
+                        This clean project is your starting canvas. After building this base version with AI guidance, it's your turn to unleash your creativity!
+                    </p>
+                </div>
+
+                <div class="card challenge-card">
+                    <div class="challenge-brand-header">
+                        <img src="assets/club-logo.svg" alt="NexaSoul Club" class="challenge-logo">
+                        <div class="challenge-badge">🏆 Mini UI/UX Hackathon Challenge</div>
+                    </div>
+                    <h3>Redesign & Edit — Make it the Most Cool!</h3>
+                    <p>
+                        Students will modify, redesign, and upgrade the Aura Detector. Whoever builds the most creative, cool, and visual masterwork wins the competition!
+                    </p>
+                    <div class="perks-box">
+                        <span class="perk-tag">👑 Coolest UI/UX Winner</span>
+                        <span class="perk-tag">🥇 Recognition & Glory</span>
+                        <span class="perk-tag">🎁 Exclusive Goodies</span>
+                        <span class="perk-tag">📜 Certificate of Merit</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SECTION 6: FOOTER -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <img src="assets/club-logo.svg" alt="NexaSoul Logo" class="footer-logo">
+                <div>
+                    <h3>NexaSoul</h3>
+                    <p>Frontend × Full Stack Development Club</p>
+                    <p>Chandigarh University</p>
+                </div>
+            </div>
+            <div class="footer-motto">
+                <p><strong>Code • Connect • Conquer</strong></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; NexaSoul — Web Development Foundation Bootcamp Base Project</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript script link -->
+    <script src="script.js"></script>
+</body>
+</html>

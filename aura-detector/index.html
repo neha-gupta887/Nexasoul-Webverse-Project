@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Aura Detector — NexaSoul</title>
+
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="style.css">
+```
+
+</head>
+
+<body>
+
+```
+<!-- Ambient background -->
+<div class="ambient-background" aria-hidden="true">
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+    <div class="orb orb-three"></div>
+    <div class="grid-overlay"></div>
+</div>
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+    <div class="container navbar-container">
+
+        <a href="#hero" class="logo">
+            <img
+                src="assets/club-logo.svg"
+                alt="NexaSoul"
+                class="logo-img"
+            >
+
+            <div class="logo-text">
+                <span class="logo-brand">NexaSoul</span>
+                <span class="logo-sub">WEBVERSE</span>
+            </div>
+        </a>
+
+        <nav class="nav-links">
+            <a href="#about">How it works</a>
+            <a href="#challenge">Challenge</a>
+
+            <button
+                class="nav-cta"
+                onclick="document.getElementById('start-btn').click()"
+            >
+                Start Scan <span>↗</span>
+            </button>
+        </nav>
+
+    </div>
+</header>
+
+
+<main>
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero-section" id="hero">
+
+        <div class="container hero-container">
+
+            <div class="hero-content">
+
+                <div class="hero-badge-box">
+                    <span class="status-dot"></span>
+                    <span class="badge">
+                        GEN-Z ENERGY SCANNER
+                    </span>
+                </div>
+
+                <p class="eyebrow">
+                    NEXASOUL // WEBVERSE
+                </p>
+
+                <h1 class="hero-title">
+                    SCAN YOUR
+                    <span>AURA.</span>
+                </h1>
+
+                <p class="hero-tagline">
+                    What's your energy saying about you?
+                </p>
+
+                <p class="hero-description">
+                    10 questions. One aura. Zero overthinking.
+                    Discover your Gen-Z energy score in under a minute.
+                </p>
+
+                <div class="hero-actions">
+
+                    <button
+                        id="start-btn"
+                        class="btn btn-primary"
+                    >
+                        <span>START AURA SCAN</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+
+                    <div class="scan-meta">
+                        <span>◉ 60 SEC</span>
+                        <span>•</span>
+                        <span>10 QUESTIONS</span>
+                        <span>•</span>
+                        <span>NO SIGNUP</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Aura visual -->
+
+            <div class="hero-visual">
+
+                <div class="aura-system">
+
+                    <div class="aura-ring ring-outer"></div>
+                    <div class="aura-ring ring-middle"></div>
+                    <div class="aura-ring ring-inner"></div>
+
+                    <div class="aura-core">
+
+                        <div class="core-glow"></div>
+
+                        <img
+                            src="assets/favicon.svg"
+                            alt=""
+                            class="core-symbol"
+                        >
+
+                        <span class="core-label">
+                            AURA
+                        </span>
+
+                        <span class="core-status">
+                            READY TO SCAN
+                        </span>
+
+                    </div>
+
+                    <span class="orbit-label label-energy">
+                        ENERGY
+                    </span>
+
+                    <span class="orbit-label label-vibe">
+                        VIBE
+                    </span>
+
+                    <span class="orbit-label label-chaos">
+                        CHAOS
+                    </span>
+
+                    <span class="orbit-label label-confidence">
+                        CONFIDENCE
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="hero-scroll">
+            <span>SCROLL TO EXPLORE</span>
+            <span class="scroll-line"></span>
+        </div>
+
+    </section>
+
+
+    <!-- ================= ABOUT / HOW IT WORKS ================= -->
+
+    <section class="about-section" id="about">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">01 // THE PROCESS</p>
+
+                    <h2>
+                        THREE STEPS.
+                        <span>ONE AURA.</span>
+                    </h2>
+                </div>
+
+                <p>
+                    No complicated science. Just instinct,
+                    personality and a little bit of chaos.
+                </p>
+
+            </div>
+
+
+            <div class="process-grid">
+
+                <article class="process-card">
+
+                    <span class="step-number">01</span>
+
+                    <div class="process-icon">◉</div>
+
+                    <h3>ANSWER</h3>
+
+                    <p>
+                        Pick the answer that feels most like
+                        the real you. Don't overthink it.
+                    </p>
+
+                    <span class="step-line"></span>
+
+                </article>
+
+
+                <article class="process-card active-process">
+
+                    <span class="step-number">02</span>
+
+                    <div class="process-icon">✦</div>
+
+                    <h3>ANALYZE</h3>
+
+                    <p>
+                        Your choices are transformed into
+                        an energy profile and aura score.
+                    </p>
+
+                    <span class="step-line"></span>
+
+                </article>
+
+
+                <article class="process-card">
+
+                    <span class="step-number">03</span>
+
+                    <div class="process-icon">✧</div>
+
+                    <h3>REVEAL</h3>
+
+                    <p>
+                        Meet your aura level and discover
+                        exactly what your energy says.
+                    </p>
+
+                    <span class="step-line"></span>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= QUIZ ================= -->
+
+    <section
+        class="quiz-section"
+        id="quiz-container"
+        style="display: none;"
+    >
+
+        <div class="container">
+
+            <div class="quiz-topline">
+
+                <div>
+                    <p class="eyebrow">AURA SCAN</p>
+                    <span class="scan-state">
+                        ● LIVE ANALYSIS
+                    </span>
+                </div>
+
+                <div class="quiz-counter">
+                    <span id="question-progress">
+                        Question 1 of 10
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="quiz-card">
+
+                <div class="quiz-header">
+
+                    <div class="progress-info">
+                        <span>SCAN PROGRESS</span>
+                        <strong id="progress-percent">10%</strong>
+                    </div>
+
+                    <div class="progress-bar-bg">
+                        <div
+                            id="progress-bar-fill"
+                            class="progress-bar-fill"
+                        ></div>
+                    </div>
+
+                </div>
+
+
+                <div class="question-box">
+
+                    <div class="question-label">
+                        QUESTION
+                    </div>
+
+                    <h2 id="question-text">
+                        Question text will load here...
+                    </h2>
+
+                    <p class="question-hint">
+                        Choose the response that feels most YOU.
+                    </p>
+
+                    <div
+                        id="options-container"
+                        class="options-container"
+                    >
+                        <!-- Options rendered by script.js -->
+                    </div>
+
+                </div>
+
+
+                <div class="quiz-footer">
+
+                    <p
+                        id="warning-msg"
+                        class="warning-text"
+                        style="display: none;"
+                    >
+                        Please select an option before proceeding.
+                    </p>
+
+                    <div class="keyboard-hint">
+                        <span>TIP</span>
+                        Press <kbd>1</kbd>–<kbd>4</kbd> to answer
+                    </div>
+
+                    <button
+                        id="next-btn"
+                        class="btn btn-primary"
+                    >
+                        <span>NEXT QUESTION</span>
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= RESULT ================= -->
+
+    <section
+        class="result-section"
+        id="result-container"
+        style="display: none;"
+    >
+
+        <div class="container">
+
+            <div class="result-header">
+
+                <p class="eyebrow">
+                    AURA ANALYSIS // COMPLETE
+                </p>
+
+                <h2>
+                    YOUR AURA HAS
+                    <span>BEEN DETECTED.</span>
+                </h2>
+
+            </div>
+
+
+            <div class="result-card">
+
+                <div class="result-visual">
+
+                    <div class="result-ring">
+
+                        <svg
+                            class="score-circle"
+                            viewBox="0 0 220 220"
+                        >
+                            <circle
+                                class="score-track"
+                                cx="110"
+                                cy="110"
+                                r="96"
+                            />
+
+                            <circle
+                                id="score-progress"
+                                class="score-progress"
+                                cx="110"
+                                cy="110"
+                                r="96"
+                            />
+                        </svg>
+
+                        <div class="score-center">
+
+                            <span class="score-small">
+                                AURA SCORE
+                            </span>
+
+                            <div class="score-display">
+                                <span id="final-score">0</span>
+                                <span class="total-score">
+                                    / 100
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result-content">
+
+                    <span class="result-label">
+                        DETECTED LEVEL
+                    </span>
+
+                    <h3 id="aura-level-title">
+                        🔥 PRO AURA
+                    </h3>
+
+                    <p
+                        id="aura-level-desc"
+                        class="aura-description"
+                    >
+                        Result description will load here...
+                    </p>
+
+
+                    <div class="profile-stats">
+
+                        <div class="stat">
+                            <div class="stat-top">
+                                <span>ENERGY</span>
+                                <strong id="energy-value">82%</strong>
+                            </div>
+
+                            <div class="stat-bar">
+                                <span
+                                    id="energy-bar"
+                                    style="width:82%"
+                                ></span>
+                            </div>
+                        </div>
+
+
+                        <div class="stat">
+                            <div class="stat-top">
+                                <span>CONFIDENCE</span>
+                                <strong id="confidence-value">74%</strong>
+                            </div>
+
+                            <div class="stat-bar">
+                                <span
+                                    id="confidence-bar"
+                                    style="width:74%"
+                                ></span>
+                            </div>
+                        </div>
+
+
+                        <div class="stat">
+                            <div class="stat-top">
+                                <span>CHAOS</span>
+                                <strong id="chaos-value">91%</strong>
+                            </div>
+
+                            <div class="stat-bar">
+                                <span
+                                    id="chaos-bar"
+                                    style="width:91%"
+                                ></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-actions">
+
+                        <button
+                            id="share-btn"
+                            class="btn btn-primary"
+                        >
+                            SHARE MY AURA ↗
+                        </button>
+
+                        <button
+                            id="retry-btn"
+                            class="btn btn-secondary"
+                        >
+                            SCAN AGAIN ↻
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CHALLENGE ================= -->
+
+    <section
+        class="challenge-section"
+        id="challenge"
+    >
+
+        <div class="container">
+
+            <div class="challenge-card">
+
+                <div class="challenge-top">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            02 // THE CHALLENGE
+                        </p>
+
+                        <h2>
+                            BUILT TO LEARN.
+                            <span>MADE TO IMPROVE.</span>
+                        </h2>
+
+                    </div>
+
+                    <div class="challenge-badge">
+                        🏆 MINI UI/UX HACKATHON
+                    </div>
+
+                </div>
+
+
+                <p class="challenge-intro">
+                    This base project is your starting canvas.
+                    Redesign it, experiment with it, and turn
+                    it into something people actually want to use.
+                </p>
+
+
+                <div class="perks-box">
+
+                    <span class="perk-tag">
+                        👑 COOLEST UI/UX
+                    </span>
+
+                    <span class="perk-tag">
+                        🥇 RECOGNITION
+                    </span>
+
+                    <span class="perk-tag">
+                        🎁 EXCLUSIVE GOODIES
+                    </span>
+
+                    <span class="perk-tag">
+                        📜 CERTIFICATE
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="container footer-content">
+
+        <div class="footer-brand">
+
+            <img
+                src="assets/club-logo.svg"
+                alt="NexaSoul"
+                class="footer-logo"
+            >
+
+            <div>
+                <h3>NexaSoul</h3>
+
+                <p>
+                    Frontend × Full Stack Development Club
+                </p>
+
+                <p>
+                    Chandigarh University
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="footer-motto">
+            <p>
+                <strong>Code • Connect • Conquer</strong>
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+            © NexaSoul — Web Development Foundation Bootcamp
+        </p>
+
+        <span>
+            AURA DETECTOR v2.0
+        </span>
+
+    </div>
+
+</footer>
+
+
+<!-- ================= ANALYSIS OVERLAY ================= -->
+
+<div
+    id="analysis-overlay"
+    class="analysis-overlay"
+    style="display:none;"
+    aria-live="polite"
+>
+
+    <div class="analysis-core">
+
+        <div class="analysis-rings">
+            <span></span>
+            <span></span>
+            <span></span>
+
+            <img
+                src="assets/favicon.svg"
+                alt=""
+            >
+        </div>
+
+        <p class="analysis-eyebrow">
+            AURA ENGINE
+        </p>
+
+        <h2>
+            CALIBRATING<br>
+            YOUR ENERGY...
+        </h2>
+
+        <div class="analysis-progress">
+            <span></span>
+        </div>
+
+        <p class="analysis-status">
+            Reading your choices • Mapping your vibe
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- Toast -->
+<div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+></div>
+
+
+<script src="script.js"></script>
+```
+
+</body>
+</html>
