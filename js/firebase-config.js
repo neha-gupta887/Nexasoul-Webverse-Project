@@ -1,24 +1,18 @@
 /**
- * Firebase Configuration for EduServe
+ * Firebase Configuration for EduServe Production
  * 
- * TO CONNECT REAL FIREBASE:
- * 1. Go to https://console.firebase.google.com/
- * 2. Create a new Firebase project (e.g. "student-services-app")
- * 3. In Project Settings, add a Web App ("</>") and copy your firebaseConfig below.
- * 4. In Firebase Console:
- *    - Enable Authentication (Email/Password & Google)
- *    - Enable Cloud Firestore (Start in test mode or production with rules)
- *    - Enable Storage (For student file uploads)
- * 5. Paste your config values into the `firebaseConfig` object below!
+ * You can configure Firebase in two ways:
+ * 1. Directly in this file by updating `firebaseConfig` below, OR
+ * 2. In the Admin Dashboard under "⚙️ Database Settings" (saves to browser storage).
  */
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+const defaultFirebaseConfig = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
 };
 
 // State flags
@@ -28,36 +22,77 @@ let firebaseDb = null;
 let firebaseStorage = null;
 let isFirebaseConnected = false;
 
-// Check if valid Firebase configuration is present
-function isConfigured(config) {
-  return config && 
-         config.apiKey && 
-         config.apiKey !== "YOUR_API_KEY_HERE" && 
-         config.projectId && 
-         config.projectId !== "YOUR_PROJECT_ID";
-}
-
-// Initialize Firebase safely
-try {
-  if (typeof firebase !== "undefined" && isConfigured(firebaseConfig)) {
-    firebaseApp = firebase.initializeApp(firebaseConfig);
-    firebaseAuth = firebase.auth();
-    firebaseDb = firebase.firestore();
-    firebaseStorage = firebase.storage();
-    isFirebaseConnected = true;
-    console.log("🔥 Firebase initialized successfully!");
-  } else {
-    console.info("⚡ EduServe running with Hybrid Local Storage engine (Firebase config can be added in js/firebase-config.js)");
+function getActiveFirebaseConfig() {
+  try {
+    const saved = localStorage.getItem("eduserve_firebase_config_live");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.apiKey && parsed.projectId) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn("Could not parse saved custom Firebase config", e);
   }
-} catch (error) {
-  console.warn("⚠️ Firebase init fallback: Running in robust offline/local storage mode.", error);
-  isFirebaseConnected = false;
+  return defaultFirebaseConfig;
 }
 
-// Export for global access
-window.firebaseConfig = firebaseConfig;
+function isConfigValid(config) {
+  return config && 
+         typeof config.apiKey === "string" &&
+         config.apiKey.length > 10 && 
+         !config.apiKey.includes("YOUR_") &&
+         typeof config.projectId === "string" &&
+         config.projectId.length > 2 &&
+         !config.projectId.includes("YOUR_");
+}
+
+function initializeFirebaseEngine(config = null) {
+  const conf = config || getActiveFirebaseConfig();
+  
+  if (typeof firebase === "undefined") {
+    console.info("Firebase SDK not loaded. Running in local storage mode.");
+    isFirebaseConnected = false;
+    return false;
+  }
+
+  if (isConfigValid(conf)) {
+    try {
+      if (firebase.apps.length > 0) {
+        firebaseApp = firebase.app();
+      } else {
+        firebaseApp = firebase.initializeApp(conf);
+      }
+      firebaseAuth = firebase.auth();
+      firebaseDb = firebase.firestore();
+      firebaseStorage = firebase.storage();
+      isFirebaseConnected = true;
+      console.log("🔥 Connected to live Google Firebase Project:", conf.projectId);
+      return true;
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+      isFirebaseConnected = false;
+      return false;
+    }
+  } else {
+    isFirebaseConnected = false;
+    return false;
+  }
+}
+
+// Initial Run
+initializeFirebaseEngine();
+
+// Global exports
+window.firebaseConfig = getActiveFirebaseConfig();
 window.firebaseApp = firebaseApp;
 window.firebaseAuth = firebaseAuth;
 window.firebaseDb = firebaseDb;
 window.firebaseStorage = firebaseStorage;
 window.isFirebaseConnected = () => isFirebaseConnected;
+window.reinitializeFirebase = (newConfig) => {
+  if (newConfig) {
+    localStorage.setItem("eduserve_firebase_config_live", JSON.stringify(newConfig));
+  }
+  return initializeFirebaseEngine(newConfig);
+};

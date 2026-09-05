@@ -1,7 +1,7 @@
 /**
- * app.js - Main Application Controller for EduServe
- * Coordinates view routing, services catalog, request submission,
- * student tracking dashboard, and the full admin management portal.
+ * app.js - Main Application Controller for EduServe Production
+ * Coordinates routing, services catalog, request lifecycle, student dashboard,
+ * and the complete administrator portal.
  */
 
 class AppController {
@@ -55,7 +55,6 @@ class AppController {
    * NAVIGATION & ROUTING
    * ========================================================================= */
   setupNavigation() {
-    // Mobile menu toggle
     const navToggle = document.getElementById("navToggle");
     const navMenu = document.getElementById("navMenu");
     if (navToggle && navMenu) {
@@ -64,7 +63,6 @@ class AppController {
       });
     }
 
-    // Nav Links
     document.querySelectorAll("[data-navigate]").forEach(el => {
       el.addEventListener("click", (e) => {
         e.preventDefault();
@@ -75,7 +73,6 @@ class AppController {
       });
     });
 
-    // Admin Auth State Changes
     window.authService.onAuthChange((adminUser) => {
       this.updateAuthNavState(adminUser);
     });
@@ -93,20 +90,17 @@ class AppController {
     const views = document.querySelectorAll(".view-section");
     let targetView = document.getElementById(`view-${viewId}`);
 
-    // If target view does not exist, default to home
     if (!targetView) {
       viewId = "home";
       targetView = document.getElementById("view-home");
     }
 
-    // Route Protection for Admin Dashboard
     if (viewId === "admin-dashboard" && !window.authService.isAdmin()) {
-      this.showToast("info", "Admin Access Required", "Please log in to access the administrator dashboard.");
+      this.showToast("info", "Admin Sign-In Required", "Please authenticate to access the administrator portal.");
       viewId = "admin-login";
       targetView = document.getElementById("view-admin-login");
     }
 
-    // Switch visible view
     views.forEach(v => v.style.display = "none");
     if (targetView) targetView.style.display = "block";
 
@@ -115,7 +109,6 @@ class AppController {
       window.location.hash = viewId;
     }
 
-    // Update active state in nav links
     document.querySelectorAll(".nav-link").forEach(link => {
       if (link.getAttribute("data-navigate") === viewId) {
         link.classList.add("active");
@@ -124,7 +117,6 @@ class AppController {
       }
     });
 
-    // View-specific trigger actions
     if (viewId === "services") {
       this.renderServices();
     } else if (viewId === "student-dashboard") {
@@ -149,7 +141,7 @@ class AppController {
       adminNavBtn.setAttribute("data-navigate", "admin-dashboard");
       adminNavBtn.className = "btn btn-sm btn-primary";
     } else {
-      adminNavBtn.textContent = "Admin Login";
+      adminNavBtn.textContent = "Admin Portal";
       adminNavBtn.setAttribute("data-navigate", "admin-login");
       adminNavBtn.className = "btn btn-sm btn-outline";
     }
@@ -159,7 +151,6 @@ class AppController {
    * SERVICES CATALOG CONTROLLER
    * ========================================================================= */
   setupServicesCatalog() {
-    // Category Filter Buttons
     const filterContainer = document.getElementById("categoryFilters");
     if (filterContainer) {
       filterContainer.addEventListener("click", (e) => {
@@ -172,7 +163,6 @@ class AppController {
       });
     }
 
-    // Search Input
     const searchInput = document.getElementById("serviceSearchInput");
     if (searchInput) {
       searchInput.addEventListener("input", (e) => {
@@ -189,7 +179,6 @@ class AppController {
 
     const allServices = await window.dbService.getServices();
 
-    // Filter by Category & Search
     let filtered = allServices.filter(service => {
       const matchCategory = this.servicesCategoryFilter === "all" || 
         service.category.toLowerCase() === this.servicesCategoryFilter.toLowerCase();
@@ -239,7 +228,6 @@ class AppController {
       </article>
     `;
 
-    // Render in main Services page
     if (servicesGrid) {
       if (filtered.length === 0) {
         servicesGrid.innerHTML = `
@@ -255,12 +243,10 @@ class AppController {
       }
     }
 
-    // Render in Home Featured Preview
     if (homePreviewGrid) {
       homePreviewGrid.innerHTML = allServices.slice(0, 4).map(createServiceCardHTML).join("");
     }
 
-    // Attach click handlers to "Request Service" buttons
     document.querySelectorAll(".btn-request-srv").forEach(btn => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -269,7 +255,6 @@ class AppController {
       });
     });
 
-    // Populate Request form service dropdown
     this.populateServicesDropdown(allServices);
   }
 
@@ -313,7 +298,6 @@ class AppController {
     const removeFileBtn = document.getElementById("removeFileBtn");
     const serviceSelect = document.getElementById("reqServiceSelect");
 
-    // Service dropdown change -> update price badge
     if (serviceSelect) {
       serviceSelect.addEventListener("change", () => {
         const opt = serviceSelect.options[serviceSelect.selectedIndex];
@@ -323,7 +307,6 @@ class AppController {
       });
     }
 
-    // File Drag and Drop
     if (dropBox && fileInput) {
       ["dragenter", "dragover"].forEach(event => {
         dropBox.addEventListener(event, (e) => {
@@ -361,7 +344,6 @@ class AppController {
       });
     }
 
-    // Form Submission
     if (form) {
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -400,7 +382,6 @@ class AppController {
       if (priceBadge) priceBadge.textContent = `$${service.price}`;
     }
 
-    // Scroll to request container
     const reqFormCard = document.getElementById("requestFormContainer");
     if (reqFormCard) {
       reqFormCard.scrollIntoView({ behavior: "smooth" });
@@ -413,7 +394,7 @@ class AppController {
 
     try {
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span>Submitting Request...</span>`;
+      submitBtn.innerHTML = `<span>Registering Order...</span>`;
 
       const studentName = document.getElementById("reqStudentName").value.trim();
       const studentEmail = document.getElementById("reqStudentEmail").value.trim();
@@ -429,7 +410,6 @@ class AppController {
       const serviceName = selectedOption ? selectedOption.getAttribute("data-name") : "Academic Service";
       const servicePrice = selectedOption ? parseFloat(selectedOption.getAttribute("data-price")) : 0;
 
-      // Process uploaded file
       let fileData = { fileName: null, fileSize: null, fileUrl: null };
       if (this.uploadedFile) {
         fileData = await window.dbService.processLocalFile(this.uploadedFile);
@@ -452,10 +432,8 @@ class AppController {
         fileUrl: fileData.fileUrl
       });
 
-      // Save student email for effortless dashboard access
       window.authService.saveRecentStudentEmail(studentEmail);
 
-      // Reset form
       form.reset();
       this.uploadedFile = null;
       const previewCard = document.getElementById("filePreviewCard");
@@ -463,12 +441,11 @@ class AppController {
       if (previewCard) previewCard.style.display = "none";
       if (dropBox) dropBox.style.display = "block";
 
-      // Show Confirmation Modal with Tracking ID
       this.showRequestSuccessModal(newRequest);
-      this.showToast("success", "Request Submitted!", `Your order ${newRequest.id} is now registered.`);
+      this.showToast("success", "Request Registered!", `Tracking ID ${newRequest.id} created.`);
     } catch (err) {
       console.error("Submission error:", err);
-      this.showToast("error", "Submission Failed", err.message || "Please check required fields.");
+      this.showToast("error", "Submission Error", err.message || "Please check all required fields.");
     } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalText;
@@ -534,7 +511,6 @@ class AppController {
     const searchTerm = searchInput ? searchInput.value.trim() : "";
     let requests = await window.dbService.getAllRequests();
 
-    // If search term provided, filter by email, phone, or specific ID
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       requests = requests.filter(r => 
@@ -545,10 +521,8 @@ class AppController {
       );
     }
 
-    // Update status counts badges
     this.updateStudentDashboardCounts();
 
-    // Filter by Active Tab
     if (this.studentActiveFilter !== "all") {
       requests = requests.filter(r => r.status.toLowerCase() === this.studentActiveFilter.toLowerCase());
     }
@@ -558,7 +532,7 @@ class AppController {
         <div class="empty-state" style="background: white; border-radius: var(--radius-xl); border: 1px solid var(--border-color);">
           <div class="empty-state-icon">📦</div>
           <h3>No requests found</h3>
-          <p>${searchTerm ? `No requests matching "${searchTerm}". Try searching your exact email or Request ID.` : 'You haven\'t submitted any requests yet.'}</p>
+          <p>${searchTerm ? `No records found for "${searchTerm}". Enter your student email or exact Request ID.` : 'You haven\'t submitted any requests yet.'}</p>
           <button class="btn btn-primary btn-sm" data-navigate="services">Explore Available Services</button>
         </div>
       `;
@@ -568,12 +542,11 @@ class AppController {
 
     container.innerHTML = requests.map(req => this.createStudentRequestCard(req)).join("");
 
-    // Attach cancel request buttons
     container.querySelectorAll(".btn-cancel-request").forEach(btn => {
       btn.addEventListener("click", async (e) => {
         const id = btn.getAttribute("data-request-id");
         if (confirm(`Are you sure you want to cancel request ${id}?`)) {
-          await window.dbService.updateRequestStatus(id, "Cancelled", "Cancelled by student request.");
+          await window.dbService.updateRequestStatus(id, "Cancelled", "Cancelled by student.");
           this.showToast("info", "Request Cancelled", `Request ${id} has been marked as Cancelled.`);
           this.renderStudentDashboard();
         }
@@ -606,10 +579,8 @@ class AppController {
       month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
     });
 
-    // Calculate stepper state
     const statuses = ["Pending", "Accepted", "In Progress", "Completed"];
     const currentIdx = statuses.indexOf(req.status);
-
     const canCancel = req.status === "Pending" || req.status === "Accepted";
 
     return `
@@ -674,9 +645,9 @@ class AppController {
                   <strong style="font-size: 0.85rem; display: block;">${req.fileName}</strong>
                   <span style="font-size: 0.75rem; color: var(--text-light);">${req.fileSize || 'Attachment'}</span>
                 </div>
-                ${req.fileUrl ? `<a href="${req.fileUrl}" target="_blank" class="btn btn-sm btn-outline" style="padding: 0.2rem 0.6rem; margin-left: auto;">View</a>` : ''}
+                ${req.fileUrl ? `<a href="${req.fileUrl}" target="_blank" class="btn btn-sm btn-outline" style="padding: 0.2rem 0.6rem; margin-left: auto;">View File</a>` : ''}
               </div>
-            ` : `<span style="color: var(--text-light); font-size: 0.85rem;">No files uploaded</span>`}
+            ` : `<span style="color: var(--text-light); font-size: 0.85rem;">No files attached</span>`}
           </div>
         </div>
 
@@ -702,10 +673,11 @@ class AppController {
    * ADMIN PORTAL CONTROLLER
    * ========================================================================= */
   setupAdminPortal() {
-    // Admin Login Form
     const loginForm = document.getElementById("adminLoginForm");
-    const demoLoginBtn = document.getElementById("btnDemoAdminLogin");
     const logoutBtn = document.getElementById("btnAdminLogout");
+    const exportCsvBtn = document.getElementById("btnExportCSV");
+    const firebaseSettingsForm = document.getElementById("firebaseSettingsForm");
+    const adminPasswordForm = document.getElementById("adminPasswordChangeForm");
 
     if (loginForm) {
       loginForm.addEventListener("submit", async (e) => {
@@ -716,25 +688,10 @@ class AppController {
 
         try {
           const res = await window.authService.loginAdmin(email, pass, remember);
-          this.showToast("success", "Welcome Admin", res.message);
+          this.showToast("success", "Authentication Successful", res.message);
           this.navigateTo("admin-dashboard");
         } catch (err) {
-          this.showToast("error", "Login Failed", err.message);
-        }
-      });
-    }
-
-    if (demoLoginBtn) {
-      demoLoginBtn.addEventListener("click", async () => {
-        try {
-          const res = await window.authService.loginAdmin(
-            window.DEMO_ADMIN_CREDENTIALS.email,
-            window.DEMO_ADMIN_CREDENTIALS.password
-          );
-          this.showToast("success", "Demo Mode", "Logged in with Admin Demo account!");
-          this.navigateTo("admin-dashboard");
-        } catch (err) {
-          this.showToast("error", "Demo Login Error", err.message);
+          this.showToast("error", "Sign-in Failed", err.message);
         }
       });
     }
@@ -742,12 +699,18 @@ class AppController {
     if (logoutBtn) {
       logoutBtn.addEventListener("click", async () => {
         await window.authService.logoutAdmin();
-        this.showToast("info", "Logged Out", "You have securely logged out.");
+        this.showToast("info", "Signed Out", "Administrator session closed.");
         this.navigateTo("home");
       });
     }
 
-    // Admin Sidebar Tabs
+    if (exportCsvBtn) {
+      exportCsvBtn.addEventListener("click", () => {
+        window.dbService.exportRequestsCSV();
+        this.showToast("success", "Export Ready", "Student requests downloaded as CSV.");
+      });
+    }
+
     const adminSidebar = document.getElementById("adminSidebarNav");
     if (adminSidebar) {
       adminSidebar.addEventListener("click", (e) => {
@@ -758,13 +721,11 @@ class AppController {
       });
     }
 
-    // Admin Add Service Button
     const btnAddService = document.getElementById("btnAdminAddService");
     if (btnAddService) {
       btnAddService.addEventListener("click", () => this.openServiceEditorModal());
     }
 
-    // Admin Service Modal Form Submit
     const serviceForm = document.getElementById("adminServiceForm");
     if (serviceForm) {
       serviceForm.addEventListener("submit", async (e) => {
@@ -773,7 +734,6 @@ class AppController {
       });
     }
 
-    // Admin Request Table Filters
     const reqStatusFilter = document.getElementById("adminReqStatusFilter");
     const reqSearch = document.getElementById("adminReqSearchInput");
     if (reqStatusFilter) {
@@ -781,6 +741,58 @@ class AppController {
     }
     if (reqSearch) {
       reqSearch.addEventListener("input", () => this.renderAdminRequestsTable());
+    }
+
+    // Firebase live settings form
+    if (firebaseSettingsForm) {
+      firebaseSettingsForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const apiKey = document.getElementById("cfgApiKey").value.trim();
+        const projectId = document.getElementById("cfgProjectId").value.trim();
+        const authDomain = document.getElementById("cfgAuthDomain").value.trim();
+        const storageBucket = document.getElementById("cfgStorageBucket").value.trim();
+
+        const config = {
+          apiKey,
+          projectId,
+          authDomain: authDomain || `${projectId}.firebaseapp.com`,
+          storageBucket: storageBucket || `${projectId}.appspot.com`
+        };
+
+        const success = window.reinitializeFirebase(config);
+        if (success) {
+          this.showToast("success", "Firebase Connected!", `Live database synced with ${projectId}`);
+        } else {
+          this.showToast("info", "Settings Saved", "Config saved. Enter valid Firebase credentials to connect live.");
+        }
+        this.updateFirebaseStatusDisplay();
+      });
+    }
+
+    // Admin password update form
+    if (adminPasswordForm) {
+      adminPasswordForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = document.getElementById("cfgAdminEmail").value.trim();
+        const newPass = document.getElementById("cfgAdminNewPass").value.trim();
+
+        window.authService.updateAdminPassword(email, newPass);
+        this.showToast("success", "Credentials Updated", `Admin email set to ${email}.`);
+        adminPasswordForm.reset();
+      });
+    }
+  }
+
+  updateFirebaseStatusDisplay() {
+    const indicator = document.getElementById("firebaseStatusIndicator");
+    if (!indicator) return;
+
+    if (window.isFirebaseConnected && window.isFirebaseConnected()) {
+      indicator.className = "badge badge-completed";
+      indicator.textContent = "● Live Firebase Cloud Connected";
+    } else {
+      indicator.className = "badge badge-pending";
+      indicator.textContent = "● Resilient Local Engine (Ready to connect)";
     }
   }
 
@@ -806,6 +818,8 @@ class AppController {
       this.renderAdminServicesTable();
     } else if (tabId === "students") {
       this.renderAdminStudentsDirectory();
+    } else if (tabId === "settings") {
+      this.updateFirebaseStatusDisplay();
     }
   }
 
@@ -831,7 +845,6 @@ class AppController {
     const completed = allRequests.filter(r => r.status === "Completed").length;
     const revenue = allRequests.reduce((sum, r) => sum + (parseFloat(r.servicePrice) || 0), 0);
 
-    // KPI Numbers
     const elTotal = document.getElementById("kpiTotalRequests");
     const elPending = document.getElementById("kpiPendingRequests");
     const elActive = document.getElementById("kpiActiveRequests");
@@ -846,12 +859,11 @@ class AppController {
     if (elRevenue) elRevenue.textContent = `$${revenue.toLocaleString()}`;
     if (elServices) elServices.textContent = allServices.length;
 
-    // Recent Requests Preview in Overview
     const recentTableBody = document.getElementById("adminRecentRequestsBody");
     if (recentTableBody) {
       const recent = allRequests.slice(0, 5);
       if (recent.length === 0) {
-        recentTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-light);">No requests recorded yet.</td></tr>`;
+        recentTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-light);">No orders registered yet.</td></tr>`;
       } else {
         recentTableBody.innerHTML = recent.map(req => this.createAdminTableRow(req)).join("");
         this.attachAdminTableEvents(recentTableBody);
@@ -935,7 +947,6 @@ class AppController {
   }
 
   attachAdminTableEvents(container) {
-    // Quick Status Dropdown Change
     container.querySelectorAll(".status-select").forEach(select => {
       select.addEventListener("change", async (e) => {
         const id = select.getAttribute("data-request-id");
@@ -951,7 +962,6 @@ class AppController {
       });
     });
 
-    // View Details Modal
     container.querySelectorAll(".btn-view-request").forEach(btn => {
       btn.addEventListener("click", () => {
         const id = btn.getAttribute("data-request-id");
@@ -975,7 +985,6 @@ class AppController {
     document.getElementById("modalDetailPriority").textContent = req.priority;
     document.getElementById("modalDetailInstructions").textContent = req.instructions || 'No special instructions.';
 
-    // File Preview
     const fileArea = document.getElementById("modalDetailFileArea");
     if (fileArea) {
       if (req.fileName) {
@@ -992,7 +1001,6 @@ class AppController {
       }
     }
 
-    // Admin Notes & Status Editor inside Modal
     const statusSelect = document.getElementById("modalDetailStatusSelect");
     const notesInput = document.getElementById("modalDetailAdminNotes");
     if (statusSelect) statusSelect.value = req.status;
@@ -1005,7 +1013,7 @@ class AppController {
         const newNotes = notesInput.value;
         await window.dbService.updateRequestStatus(req.id, newStatus, newNotes);
         this.closeModal("adminRequestDetailModal");
-        this.showToast("success", "Saved", `Request ${req.id} updated.`);
+        this.showToast("success", "Changes Saved", `Request ${req.id} updated.`);
         this.renderAdminRequestsTable();
         this.renderAdminOverview();
       };
@@ -1057,7 +1065,6 @@ class AppController {
       </tr>
     `).join("");
 
-    // Attach Edit and Delete buttons
     tableBody.querySelectorAll(".btn-edit-service").forEach(btn => {
       btn.addEventListener("click", () => {
         const id = btn.getAttribute("data-service-id");
@@ -1150,7 +1157,6 @@ class AppController {
 
     const allRequests = await window.dbService.getAllRequests();
     
-    // Group requests by student email
     const studentMap = new Map();
     allRequests.forEach(req => {
       const email = (req.studentEmail || "unknown").toLowerCase();
@@ -1273,7 +1279,7 @@ class AppController {
   }
 }
 
-// Instantiate and expose globally
+// Global Singleton Instance
 window.app = new AppController();
 document.addEventListener("DOMContentLoaded", () => {
   window.app.init();

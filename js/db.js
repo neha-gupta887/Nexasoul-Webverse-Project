@@ -1,13 +1,12 @@
 /**
- * db.js - Unified Data & Storage Layer for EduServe
- * Seamlessly interfaces with Firebase Firestore & Storage, with automatic
- * reactive LocalStorage fallback when running in local development mode.
+ * db.js - Unified Production Data & Storage Layer for EduServe
+ * Connects directly to Cloud Firestore & Firebase Storage, with automatic
+ * resilient persistence fallback.
  */
 
 const DB_KEYS = {
   SERVICES: "eduserve_services_v1",
-  REQUESTS: "eduserve_requests_v1",
-  CONFIG_MODE: "eduserve_storage_mode"
+  REQUESTS: "eduserve_requests_v1"
 };
 
 class DataService {
@@ -32,7 +31,7 @@ class DataService {
         console.log("🔥 Connected to Firebase Firestore");
         return;
       } catch (err) {
-        console.warn("⚠️ Firestore sync failed, falling back to LocalStorage:", err);
+        console.warn("⚠️ Firestore sync failed, loading fallback local storage:", err);
       }
     }
 
@@ -83,7 +82,7 @@ class DataService {
   }
 
   /* =========================================================================
-   * FIREBASE SYNC & LISTENERS (When credentials are provided)
+   * FIREBASE SYNC & REALTIME LISTENERS
    * ========================================================================= */
   async syncFromFirebase() {
     const db = window.firebaseDb;
@@ -94,7 +93,7 @@ class DataService {
     if (!servicesSnap.empty) {
       this.services = servicesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     } else if (typeof SEED_SERVICES !== "undefined") {
-      // Seed Firestore with initial services if empty
+      // Seed initial services if empty
       const batch = db.batch();
       SEED_SERVICES.forEach(service => {
         const docRef = db.collection("services").doc(service.id);
@@ -127,14 +126,14 @@ class DataService {
     db.collection("services").onSnapshot(snapshot => {
       this.services = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       this.saveServicesLocally();
-      this.notifySubscribers();
+      this.notifySubscribers("services-sync");
     }, err => console.error("Firebase services listen error:", err));
 
     // Realtime Requests Listener
     db.collection("requests").orderBy("createdAt", "desc").onSnapshot(snapshot => {
       this.requests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       this.saveRequestsLocally();
-      this.notifySubscribers();
+      this.notifySubscribers("requests-sync");
     }, err => console.error("Firebase requests listen error:", err));
   }
 
@@ -226,16 +225,6 @@ class DataService {
     return deleted;
   }
 
-  async resetServicesToDefault() {
-    if (typeof SEED_SERVICES !== "undefined") {
-      this.services = [...SEED_SERVICES];
-      this.saveServicesLocally();
-      this.notifySubscribers("services-reset");
-      return this.services;
-    }
-    return [];
-  }
-
   /* =========================================================================
    * STUDENT REQUESTS CRUD OPERATIONS
    * ========================================================================= */
@@ -276,12 +265,12 @@ class DataService {
       fileUrl: data.fileUrl || null
     };
 
-    // If a raw File is provided and Firebase Storage is enabled, upload to Firebase Storage
+    // If a raw File is provided and Firebase Storage is connected
     if (data.rawFile && window.isFirebaseConnected && window.isFirebaseConnected() && window.firebaseStorage) {
       try {
         fileInfo = await this.uploadFileToFirebase(data.rawFile);
       } catch (err) {
-        console.warn("Storage upload failed, keeping file metadata:", err);
+        console.warn("Firebase Storage upload failed, keeping file metadata:", err);
       }
     }
 
@@ -293,13 +282,13 @@ class DataService {
       studentPhone: data.studentPhone ? data.studentPhone.trim() : "",
       university: data.university ? data.university.trim() : "Not Specified",
       serviceId: data.serviceId || "",
-      serviceName: data.serviceName || "General Academic Support",
+      serviceName: data.serviceName || "Academic Service",
       servicePrice: parseFloat(data.servicePrice) || 0,
       instructions: data.instructions ? data.instructions.trim() : "",
       deadline: data.deadline || new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 16),
       priority: data.priority || "Normal",
       status: "Pending", // Default: Pending, Accepted, In Progress, Completed, Cancelled
-      adminNotes: "New request submitted. Awaiting staff review.",
+      adminNotes: "New request registered. Assigned to review queue.",
       fileName: fileInfo.fileName,
       fileSize: fileInfo.fileSize,
       fileUrl: fileInfo.fileUrl,
@@ -368,13 +357,14 @@ class DataService {
   }
 
   /* =========================================================================
-   * FILE UPLOAD (Firebase Storage with Local FileReader fallback)
+   * FILE UPLOAD (Firebase Storage with Local Base64 preview)
    * ========================================================================= */
   async uploadFileToFirebase(file) {
     const storage = window.firebaseStorage;
     if (!storage) throw new Error("Firebase Storage not available");
 
-    const fileRef = storage.ref().child(`requests/${Date.now()}_${file.name}`);
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const fileRef = storage.ref().child(`requests/${Date.now()}_${safeName}`);
     const snapshot = await fileRef.put(file);
     const downloadUrl = await snapshot.ref.getDownloadURL();
 
@@ -390,8 +380,7 @@ class DataService {
       const reader = new FileReader();
       const fileSize = this.formatFileSize(file.size);
 
-      // For images/small files under 1.5MB, convert to base64 DataURL for local preview
-      if (file.size < 1.5 * 1024 * 1024) {
+      if (file.size < 2 * 1024 * 1024) {
         reader.onload = () => {
           resolve({
             fileName: file.name,
@@ -408,7 +397,6 @@ class DataService {
         };
         reader.readAsDataURL(file);
       } else {
-        // Large file metadata representation
         resolve({
           fileName: file.name,
           fileSize: fileSize,
@@ -427,7 +415,37 @@ class DataService {
   }
 
   /* =========================================================================
-   * SUBSCRIBER NOTIFICATIONS (Reactive UI updates)
+   * EXPORT & INVOICE UTILITIES
+   * ========================================================================= */
+  exportRequestsCSV() {
+    if (!this.requests || this.requests.length === 0) return;
+
+    const headers = ["Request ID", "Student Name", "Email", "Phone", "University", "Service", "Price ($)", "Status", "Deadline", "Created Date"];
+    const rows = this.requests.map(r => [
+      `"${r.id}"`,
+      `"${r.studentName || ''}"`,
+      `"${r.studentEmail || ''}"`,
+      `"${r.studentPhone || ''}"`,
+      `"${r.university || ''}"`,
+      `"${r.serviceName || ''}"`,
+      r.servicePrice || 0,
+      `"${r.status}"`,
+      `"${r.deadline || ''}"`,
+      `"${r.createdAt || ''}"`
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `eduserve_requests_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  /* =========================================================================
+   * SUBSCRIBER NOTIFICATIONS
    * ========================================================================= */
   subscribe(callback) {
     this.listeners.push(callback);
@@ -445,7 +463,6 @@ class DataService {
       }
     });
 
-    // Also dispatch global DOM events
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("eduserve-data-change", {
         detail: { eventType, data }

@@ -13,7 +13,7 @@
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
 
-  <!-- Firebase SDK (Compat v10 for instant browser plug-and-play) -->
+  <!-- Firebase SDK (Compat v10 for instant live cloud connectivity) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -42,7 +42,7 @@
 
       <div class="nav-actions">
         <button id="navAdminAction" class="btn btn-sm btn-outline" data-navigate="admin-login">
-          Admin Login
+          Admin Portal
         </button>
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
           ☰
@@ -489,37 +489,26 @@
         <div class="admin-login-header">
           <div class="admin-login-icon">🛡️</div>
           <h2 style="font-size: 1.65rem; margin-bottom: 0.35rem;">Admin Management Portal</h2>
-          <p style="font-size: 0.9rem; color: var(--text-muted);">Secure access for service administrators & mentors</p>
-        </div>
-
-        <!-- Quick Demo Login Helper -->
-        <div class="quick-demo-banner">
-          <div class="quick-demo-text">
-            <strong>⚡ Instant Demo Access</strong>
-            <span>admin@campus.edu / admin123</span>
-          </div>
-          <button type="button" class="btn btn-sm btn-primary" id="btnDemoAdminLogin">
-            1-Click Login
-          </button>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">Secure authentication for system administrators</p>
         </div>
 
         <form id="adminLoginForm">
           <div class="form-group">
             <label class="form-label" for="adminEmail">Admin Email</label>
-            <input type="email" id="adminEmail" class="form-control" value="admin@campus.edu" required />
+            <input type="email" id="adminEmail" class="form-control" placeholder="admin@campus.edu" required />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="adminPassword">Password</label>
-            <input type="password" id="adminPassword" class="form-control" value="admin123" required />
+            <input type="password" id="adminPassword" class="form-control" placeholder="••••••••" required />
           </div>
 
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.85rem;">
             <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
               <input type="checkbox" id="adminRemember" checked />
-              <span>Remember session</span>
+              <span>Keep me signed in</span>
             </label>
-            <span style="color: var(--primary);">Firebase Auth Protected</span>
+            <span style="color: var(--text-muted);">Encrypted Session</span>
           </div>
 
           <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem;">
@@ -540,7 +529,7 @@
         <div class="admin-profile-pill">
           <div class="admin-avatar">A</div>
           <div class="admin-profile-info">
-            <h4>Campus Admin</h4>
+            <h4>Administrator</h4>
             <span id="adminProfileEmail">admin@campus.edu</span>
           </div>
         </div>
@@ -566,6 +555,11 @@
               <span>👥</span> Student Records
             </button>
           </li>
+          <li class="admin-nav-item">
+            <button data-admin-tab="settings">
+              <span>🔥</span> Database & Security
+            </button>
+          </li>
         </ul>
 
         <div style="padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
@@ -584,7 +578,7 @@
               <h2 style="font-size: 1.85rem; margin-bottom: 0.25rem;">Administrator Overview</h2>
               <p style="color: var(--text-muted);">Real-time performance metrics and recent student orders.</p>
             </div>
-            <button class="btn btn-primary btn-sm" id="btnAdminAddServiceOverview" onclick="app.openServiceEditorModal()">
+            <button class="btn btn-primary btn-sm" onclick="app.openServiceEditorModal()">
               + Add New Service
             </button>
           </div>
@@ -686,7 +680,10 @@
                 <option value="Completed">Completed</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
-              <input type="text" id="adminReqSearchInput" class="form-control" placeholder="Search by name, ID, or service..." style="width: 240px; font-size: 0.88rem;" />
+              <input type="text" id="adminReqSearchInput" class="form-control" placeholder="Search by name, ID, or service..." style="width: 220px; font-size: 0.88rem;" />
+              <button class="btn btn-outline btn-sm" id="btnExportCSV" title="Export to CSV Spreadsheet">
+                📥 Export CSV
+              </button>
             </div>
           </div>
 
@@ -772,6 +769,78 @@
             </div>
           </div>
         </div>
+
+        <!-- Tab 5: Database & Settings Pane -->
+        <div class="admin-tab-pane" id="admin-tab-settings" style="display: none;">
+          <div style="margin-bottom: 2rem;">
+            <h2 style="font-size: 1.85rem; margin-bottom: 0.25rem;">Database & Admin Settings</h2>
+            <p style="color: var(--text-muted);">Connect your live Firebase Project or customize administrator credentials.</p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem;">
+            <!-- Firebase Project Connection Card -->
+            <div class="table-card" style="padding: 2rem;">
+              <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🔥</span> Live Firebase Cloud Connection
+              </h3>
+              <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                Connect to your Google Firebase Project (Firestore, Storage, and Authentication) in 1 step.
+              </p>
+
+              <form id="firebaseSettingsForm">
+                <div class="form-group">
+                  <label class="form-label">Firebase API Key (apiKey)</label>
+                  <input type="text" id="cfgApiKey" class="form-control" placeholder="AIzaSy..." />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Project ID (projectId)</label>
+                  <input type="text" id="cfgProjectId" class="form-control" placeholder="eduserve-app" />
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Auth Domain</label>
+                    <input type="text" id="cfgAuthDomain" class="form-control" placeholder="eduserve-app.firebaseapp.com" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Storage Bucket</label>
+                    <input type="text" id="cfgStorageBucket" class="form-control" placeholder="eduserve-app.appspot.com" />
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1rem;">
+                  <span id="firebaseStatusIndicator" class="badge badge-pill">Checking status...</span>
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    💾 Save & Connect Firebase
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Admin Password Change Card -->
+            <div class="table-card" style="padding: 2rem;">
+              <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🔒</span> Admin Credentials
+              </h3>
+              <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                Update your administrator login email and password.
+              </p>
+
+              <form id="adminPasswordChangeForm">
+                <div class="form-group">
+                  <label class="form-label">Admin Email</label>
+                  <input type="email" id="cfgAdminEmail" class="form-control" placeholder="admin@campus.edu" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">New Password</label>
+                  <input type="password" id="cfgAdminNewPass" class="form-control" placeholder="••••••••" minlength="6" required />
+                </div>
+                <button type="submit" class="btn btn-outline btn-sm" style="width: 100%; margin-top: 0.5rem;">
+                  Update Admin Login
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </main>
@@ -780,7 +849,7 @@
        MODAL 1: REQUEST CONFIRMATION / SUCCESS
        ========================================================================= -->
   <div class="modal-overlay" id="requestSuccessModal">
-    <div class="modal-container" style="max-width: 520px; text-align: center;">
+    <div class="modal-container" style="max-width: 540px; text-align: center;">
       <div class="modal-body" style="padding: 2.5rem 2rem;">
         <div style="width: 64px; height: 64px; background: var(--status-completed-bg); color: var(--status-completed-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.25rem;">
           ✓
@@ -809,10 +878,13 @@
           </div>
         </div>
 
-        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
           <button class="btn btn-primary" id="modalTrackBtn">
             View on Student Dashboard ➔
           </button>
+          <a href="https://wa.me/?text=Hello%20EduServe,%20I%20just%20submitted%20a%20request" target="_blank" class="btn btn-outline" style="color: #10b981; border-color: #a7f3d0;">
+            💬 WhatsApp Support
+          </a>
           <button class="btn btn-outline" data-modal-close>
             Close
           </button>
@@ -1052,7 +1124,7 @@
     </div>
   </footer>
 
-  <!-- Application Scripts (Loaded in dependency order) -->
+  <!-- Application Scripts -->
   <script src="js/seed-data.js"></script>
   <script src="js/firebase-config.js"></script>
   <script src="js/db.js"></script>

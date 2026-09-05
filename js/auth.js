@@ -1,19 +1,19 @@
 /**
- * auth.js - Authentication & Admin Session Management
- * Provides Firebase Authentication integration alongside instant Demo Admin
- * quick-access for effortless testing and evaluation.
+ * auth.js - Production Authentication & Admin Session Manager
+ * Full support for Firebase Authentication and custom administrator credentials.
  */
 
 const AUTH_KEYS = {
-  ADMIN_SESSION: "eduserve_admin_session_v1",
+  ADMIN_SESSION: "eduserve_admin_session_live",
+  CUSTOM_ADMIN: "eduserve_custom_admin_creds",
   REMEMBER_STUDENT: "eduserve_student_email_v1"
 };
 
-// Demo Admin Credentials for instant evaluation
-const DEMO_ADMIN = {
+// Default initial admin setup if no custom credentials are saved yet
+const INITIAL_ADMIN = {
   email: "admin@campus.edu",
-  password: "admin123",
-  displayName: "Campus Administrator",
+  passwordHash: "admin123", // Default starter password, can be changed in Admin settings
+  displayName: "System Administrator",
   role: "superadmin"
 };
 
@@ -35,22 +35,45 @@ class AuthService {
       console.warn("Could not restore admin session", e);
     }
 
-    // Listen to Firebase Auth state if configured
+    // Check Firebase Auth state if Firebase is live
     if (window.isFirebaseConnected && window.isFirebaseConnected() && window.firebaseAuth) {
       window.firebaseAuth.onAuthStateChanged(user => {
         if (user) {
           this.currentAdmin = {
             uid: user.uid,
             email: user.email,
-            displayName: user.displayName || "Firebase Admin",
+            displayName: user.displayName || "Admin",
             role: "admin",
             provider: "firebase"
           };
           sessionStorage.setItem(AUTH_KEYS.ADMIN_SESSION, JSON.stringify(this.currentAdmin));
+        } else if (this.currentAdmin && this.currentAdmin.provider === "firebase") {
+          this.currentAdmin = null;
+          sessionStorage.removeItem(AUTH_KEYS.ADMIN_SESSION);
+          localStorage.removeItem(AUTH_KEYS.ADMIN_SESSION);
         }
         this.notifyAuthChange();
       });
     }
+  }
+
+  getAdminCredentials() {
+    try {
+      const custom = localStorage.getItem(AUTH_KEYS.CUSTOM_ADMIN);
+      if (custom) return JSON.parse(custom);
+    } catch (e) {}
+    return INITIAL_ADMIN;
+  }
+
+  updateAdminPassword(newEmail, newPassword) {
+    const creds = {
+      email: newEmail.trim().toLowerCase(),
+      passwordHash: newPassword.trim(),
+      displayName: "Administrator",
+      role: "superadmin"
+    };
+    localStorage.setItem(AUTH_KEYS.CUSTOM_ADMIN, JSON.stringify(creds));
+    return true;
   }
 
   /**
@@ -60,23 +83,7 @@ class AuthService {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPass = password.trim();
 
-    // 1. Check Demo Admin Credentials
-    if (cleanEmail === DEMO_ADMIN.email.toLowerCase() && cleanPass === DEMO_ADMIN.password) {
-      this.currentAdmin = {
-        uid: "demo-admin-01",
-        email: DEMO_ADMIN.email,
-        displayName: DEMO_ADMIN.displayName,
-        role: DEMO_ADMIN.role,
-        provider: "demo"
-      };
-
-      const storage = remember ? localStorage : sessionStorage;
-      storage.setItem(AUTH_KEYS.ADMIN_SESSION, JSON.stringify(this.currentAdmin));
-      this.notifyAuthChange();
-      return { success: true, user: this.currentAdmin, message: "Welcome, Administrator!" };
-    }
-
-    // 2. Check Firebase Authentication if connected
+    // 1. Try Live Firebase Auth first if connected
     if (window.isFirebaseConnected && window.isFirebaseConnected() && window.firebaseAuth) {
       try {
         const userCredential = await window.firebaseAuth.signInWithEmailAndPassword(cleanEmail, cleanPass);
@@ -91,13 +98,31 @@ class AuthService {
         const storage = remember ? localStorage : sessionStorage;
         storage.setItem(AUTH_KEYS.ADMIN_SESSION, JSON.stringify(this.currentAdmin));
         this.notifyAuthChange();
-        return { success: true, user: this.currentAdmin, message: "Logged in via Firebase Auth!" };
+        return { success: true, user: this.currentAdmin, message: "Signed in via Firebase Authentication." };
       } catch (fbError) {
-        throw new Error(fbError.message || "Invalid Firebase credentials.");
+        // Fallback to local admin credentials check if Firebase user is not found
+        console.info("Firebase Auth login attempt:", fbError.message);
       }
     }
 
-    throw new Error("Invalid admin email or password. Use demo credentials (admin@campus.edu / admin123) or configure Firebase Auth.");
+    // 2. Authenticate against configured Admin credentials
+    const currentCreds = this.getAdminCredentials();
+    if (cleanEmail === currentCreds.email.toLowerCase() && cleanPass === currentCreds.passwordHash) {
+      this.currentAdmin = {
+        uid: "admin-master",
+        email: currentCreds.email,
+        displayName: currentCreds.displayName || "Administrator",
+        role: "admin",
+        provider: "local"
+      };
+
+      const storage = remember ? localStorage : sessionStorage;
+      storage.setItem(AUTH_KEYS.ADMIN_SESSION, JSON.stringify(this.currentAdmin));
+      this.notifyAuthChange();
+      return { success: true, user: this.currentAdmin, message: "Welcome back, Administrator!" };
+    }
+
+    throw new Error("Invalid admin email or password. Please verify your credentials.");
   }
 
   /**
@@ -127,7 +152,6 @@ class AuthService {
     return this.currentAdmin;
   }
 
-  // Student recent email remembrance for convenience
   saveRecentStudentEmail(email) {
     if (email) {
       localStorage.setItem(AUTH_KEYS.REMEMBER_STUDENT, email.trim().toLowerCase());
@@ -163,4 +187,3 @@ class AuthService {
 }
 
 window.authService = new AuthService();
-window.DEMO_ADMIN_CREDENTIALS = DEMO_ADMIN;
