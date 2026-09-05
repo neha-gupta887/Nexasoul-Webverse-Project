@@ -1,173 +1,1062 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Detector — NexaSoul Web Dev Foundation Bootcamp</title>
-    <!-- Favicon from NexaSoul Assets -->
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-    <!-- Base stylesheet containing clean layout and styling -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduServe — Student Services Hub | Academic & Digital Solutions</title>
+  <meta name="description" content="Request academic editing, full-stack coding help, UI/UX design, STEM tutoring, and career services with real-time status tracking." />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+
+  <!-- Firebase SDK (Compat v10 for instant browser plug-and-play) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
-    <!-- HEADER / NAVIGATION -->
-    <header class="navbar">
-        <div class="container navbar-container">
-            <div class="logo">
-                <img src="assets/club-logo.svg" alt="NexaSoul Club Logo" class="logo-img">
-                <div class="logo-text">
-                    <span class="logo-brand">NexaSoul</span>
-                    <span class="logo-sub">Bootcamp Base</span>
-                </div>
+  <!-- =========================================================================
+       SITE HEADER & NAVIGATION
+       ========================================================================= -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="#home" class="brand-logo" data-navigate="home">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text">Edu<span>Serve</span></div>
+      </a>
+
+      <nav>
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="#home" class="nav-link active" data-navigate="home">Home</a></li>
+          <li><a href="#services" class="nav-link" data-navigate="services">Explore Services</a></li>
+          <li><a href="#request" class="nav-link" data-navigate="request">Request Service</a></li>
+          <li><a href="#student-dashboard" class="nav-link" data-navigate="student-dashboard">Track Requests</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="navAdminAction" class="btn btn-sm btn-outline" data-navigate="admin-login">
+          Admin Login
+        </button>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+          ☰
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       VIEW 1: HOME PAGE
+       ========================================================================= -->
+  <main id="view-home" class="view-section">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-tag">
+            <span class="pulse-dot"></span>
+            <span>Verified Peer & Expert Academic Assistance</span>
+          </div>
+          <h1 class="hero-title">
+            Student Services <br />
+            <span class="gradient-text">Made Easy.</span>
+          </h1>
+          <p class="hero-description">
+            Get personalized academic editing, software & coding help, UI/UX designs, and STEM tutoring delivered on-time. Submit your requirements, attach files, and track every stage in real-time.
+          </p>
+          <div class="hero-cta">
+            <button class="btn btn-primary btn-lg" data-navigate="services">
+              Explore Services ➔
+            </button>
+            <button class="btn btn-secondary btn-lg" data-navigate="student-dashboard">
+              Track Your Request
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-num">500+</div>
+              <div class="stat-label">Projects Completed</div>
             </div>
-            <nav>
-                <a href="#about">About</a>
-                <a href="#challenge">UI/UX Challenge</a>
-            </nav>
+            <div class="stat-item">
+              <div class="stat-num">99.4%</div>
+              <div class="stat-label">On-Time Delivery</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">4.9★</div>
+              <div class="stat-label">Student Satisfaction</div>
+            </div>
+          </div>
         </div>
-    </header>
 
-    <main>
-        <!-- SECTION 1: HERO / INTRODUCTION -->
-        <section class="hero-section" id="hero">
-            <div class="container hero-container">
-                <div class="hero-badge-box">
-                    <img src="assets/favicon.svg" alt="NexaSoul Symbol" class="badge-icon">
-                    <span class="badge">Gen-Z Aura Check</span>
-                </div>
-                <h1 class="hero-title">AURA DETECTOR</h1>
-                <p class="hero-tagline">"What's your aura?"</p>
-                <p class="hero-description">
-                    Answer 10 quick questions and discover your Gen-Z aura score out of 100.
-                </p>
-                <button id="start-btn" class="btn btn-primary">Start the Aura Test →</button>
-            </div>
-        </section>
-
-        <!-- SECTION 2: ABOUT THE PROJECT -->
-        <section class="about-section" id="about">
-            <div class="container">
-                <div class="card about-card">
-                    <div class="about-header">
-                        <img src="assets/club-logo.svg" alt="NexaSoul" class="about-logo">
-                        <h2>About This Base Project</h2>
-                    </div>
-                    <p>
-                        This website is the reference project for the <strong>NexaSoul Web Development Foundation Bootcamp</strong>.
-                    </p>
-                    <p>
-                        <strong>Workshop Flow:</strong> In Phase 1, students learn how to create and structure a website step-by-step using <strong>AI Tools</strong> (prompting, basic HTML5, CSS layout, and JavaScript logic). In Phase 2, students take this clean base template and compete to redesign it!
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 3: QUIZ SECTION -->
-        <section class="quiz-section" id="quiz-container" style="display: none;">
-            <div class="container">
-                <div class="card quiz-card">
-                    <!-- Progress Bar Header -->
-                    <div class="quiz-header">
-                        <span id="question-progress">Question 1 of 10</span>
-                        <div class="progress-bar-bg">
-                            <div id="progress-bar-fill" class="progress-bar-fill"></div>
-                        </div>
-                    </div>
-
-                    <!-- Question Container -->
-                    <div class="question-box">
-                        <h2 id="question-text">Question text will load here...</h2>
-                        <div id="options-container" class="options-container">
-                            <!-- Options dynamically rendered by script.js -->
-                        </div>
-                    </div>
-
-                    <!-- Quiz Navigation Controls -->
-                    <div class="quiz-footer">
-                        <p id="warning-msg" class="warning-text" style="display: none;">Please select an option before proceeding!</p>
-                        <button id="next-btn" class="btn btn-primary">Next Question →</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 4: AURA RESULT SECTION -->
-        <section class="result-section" id="result-container" style="display: none;">
-            <div class="container">
-                <div class="card result-card">
-                    <span class="badge">Quiz Completed</span>
-                    <h2>Your Aura Score</h2>
-                    <div class="score-display">
-                        <span id="final-score">0</span>
-                        <span class="total-score">/ 100</span>
-                    </div>
-
-                    <div class="aura-level-box">
-                        <span class="level-label">Aura Level</span>
-                        <h3 id="aura-level-title">🔥 PRO AURA</h3>
-                    </div>
-
-                    <p id="aura-level-desc" class="aura-description">
-                        Result description will load here...
-                    </p>
-
-                    <button id="retry-btn" class="btn btn-secondary">Try Again 🔄</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 5: EDUCATIONAL / COMPETITION INFORMATION -->
-        <section class="challenge-section" id="challenge">
-            <div class="container">
-                <div class="challenge-header">
-                    <h2>Built to Learn. Made to Improve.</h2>
-                    <p class="challenge-intro">
-                        This clean project is your starting canvas. After building this base version with AI guidance, it's your turn to unleash your creativity!
-                    </p>
-                </div>
-
-                <div class="card challenge-card">
-                    <div class="challenge-brand-header">
-                        <img src="assets/club-logo.svg" alt="NexaSoul Club" class="challenge-logo">
-                        <div class="challenge-badge">🏆 Mini UI/UX Hackathon Challenge</div>
-                    </div>
-                    <h3>Redesign & Edit — Make it the Most Cool!</h3>
-                    <p>
-                        Students will modify, redesign, and upgrade the Aura Detector. Whoever builds the most creative, cool, and visual masterwork wins the competition!
-                    </p>
-                    <div class="perks-box">
-                        <span class="perk-tag">👑 Coolest UI/UX Winner</span>
-                        <span class="perk-tag">🥇 Recognition & Glory</span>
-                        <span class="perk-tag">🎁 Exclusive Goodies</span>
-                        <span class="perk-tag">📜 Certificate of Merit</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- SECTION 6: FOOTER -->
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-brand">
-                <img src="assets/club-logo.svg" alt="NexaSoul Logo" class="footer-logo">
+        <!-- Interactive Hero Visual -->
+        <div class="hero-visual">
+          <div class="hero-card-stack">
+            <div class="hero-preview-header">
+              <div class="hero-preview-title">
+                <div class="hero-preview-avatar">⚡</div>
                 <div>
-                    <h3>NexaSoul</h3>
-                    <p>Frontend × Full Stack Development Club</p>
-                    <p>Chandigarh University</p>
+                  <h4 style="font-size: 0.95rem;">Live Request Tracker</h4>
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">Real-Time Progress Stepper</span>
                 </div>
+              </div>
+              <span class="badge badge-inprogress">
+                <span class="badge-dot"></span>
+                In Progress
+              </span>
             </div>
-            <div class="footer-motto">
-                <p><strong>Code • Connect • Conquer</strong></p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; NexaSoul — Web Development Foundation Bootcamp Base Project</p>
-        </div>
-    </footer>
 
-    <!-- JavaScript script link -->
-    <script src="script.js"></script>
+            <div style="background: var(--bg-alt); padding: 0.85rem 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+              <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; font-weight: 700;">Service</div>
+              <div style="font-weight: 700; font-size: 0.95rem;">Full-Stack Web & Software Project Help</div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+                <span>ID: REQ-2026-8812</span>
+                <span style="font-weight: 700; color: var(--primary);">$65.00</span>
+              </div>
+            </div>
+
+            <div class="hero-sample-timeline">
+              <div class="hero-timeline-step">
+                <div class="step-icon-wrap done">✓</div>
+                <div class="step-info">
+                  <h4>1. Request Submitted</h4>
+                  <p>Requirements & attachments received</p>
+                </div>
+              </div>
+              <div class="hero-timeline-step">
+                <div class="step-icon-wrap done">✓</div>
+                <div class="step-info">
+                  <h4>2. Mentor Assigned & Accepted</h4>
+                  <p>Reviewer verified guidelines</p>
+                </div>
+              </div>
+              <div class="hero-timeline-step">
+                <div class="step-icon-wrap active">●</div>
+                <div class="step-info">
+                  <h4 style="color: var(--primary);">3. In Active Execution</h4>
+                  <p>Coding solution & automated test suite</p>
+                </div>
+              </div>
+              <div class="hero-timeline-step">
+                <div class="step-icon-wrap">4</div>
+                <div class="step-info">
+                  <h4>4. Final Delivery</h4>
+                  <p>Quality audit & student handoff</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="floating-badge">
+              <span class="star-icon">★</span>
+              <div>
+                <strong style="font-size: 0.88rem; display: block;">100% Confidential</strong>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Encrypted & Safe</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section" style="background: white;">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">Seamless 4-Step Process</span>
+          <h2 class="section-title">How EduServe Works</h2>
+          <p class="section-desc">From selecting a service to receiving polished deliverables, experience a transparent and student-centric workflow.</p>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <span class="step-number">01</span>
+            <div class="step-icon-box">🔍</div>
+            <h3>1. Explore Services</h3>
+            <p>Browse our curated catalog of academic writing, coding help, design, STEM problem sets, and career packages.</p>
+          </div>
+
+          <div class="step-card">
+            <span class="step-number">02</span>
+            <div class="step-icon-box">✍️</div>
+            <h3>2. Submit Request</h3>
+            <p>Enter your project instructions, specify formatting requirements, pick your deadline, and upload relevant files.</p>
+          </div>
+
+          <div class="step-card">
+            <span class="step-number">03</span>
+            <div class="step-icon-box">⚡</div>
+            <h3>3. Expert Execution</h3>
+            <p>A qualified mentor or designer accepts your order, completes the work meticulously, and runs quality checks.</p>
+          </div>
+
+          <div class="step-card">
+            <span class="step-number">04</span>
+            <div class="step-icon-box">🎯</div>
+            <h3>4. Track & Receive</h3>
+            <p>Monitor your progress on the live student dashboard and download completed files with revision support.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Featured Services Showcase -->
+    <section class="section services-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">Top Student Choices</span>
+          <h2 class="section-title">Popular Academic & Digital Services</h2>
+          <p class="section-desc">Explore our highest-rated student solutions trusted by hundreds across campus.</p>
+        </div>
+
+        <div class="services-grid" id="homeServicesPreview">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+          <button class="btn btn-primary btn-lg" data-navigate="services">
+            View All Services Catalog ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Student Testimonials & Trust -->
+    <section class="section" style="background: white;">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">Student Testimonials</span>
+          <h2 class="section-title">Loved by University Students</h2>
+          <p class="section-desc">Hear what students say about our quick turnarounds and professional guidance.</p>
+        </div>
+
+        <div class="steps-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="step-card" style="text-align: left;">
+            <div style="color: #f59e0b; margin-bottom: 0.75rem; font-size: 1.1rem;">★★★★★</div>
+            <p style="font-style: italic; margin-bottom: 1.25rem;">"Saved my final capstone project! The mentor helped fix our React and Express backend issues in under 24 hours with clean documentation."</p>
+            <div>
+              <strong>Rohan K.</strong>
+              <span style="display: block; font-size: 0.8rem; color: var(--text-light);">Computer Science, 4th Year</span>
+            </div>
+          </div>
+
+          <div class="step-card" style="text-align: left;">
+            <div style="color: #f59e0b; margin-bottom: 0.75rem; font-size: 1.1rem;">★★★★★</div>
+            <p style="font-style: italic; margin-bottom: 1.25rem;">"The research paper editing was phenomenal. APA citations, bibliography formatting, and grammar improvements were top notch."</p>
+            <div>
+              <strong>Priya S.</strong>
+              <span style="display: block; font-size: 0.8rem; color: var(--text-light);">Biotechnology Major</span>
+            </div>
+          </div>
+
+          <div class="step-card" style="text-align: left;">
+            <div style="color: #f59e0b; margin-bottom: 0.75rem; font-size: 1.1rem;">★★★★★</div>
+            <p style="font-style: italic; margin-bottom: 1.25rem;">"Ordered the ATS Resume Optimization and landed 3 internship interview calls within two weeks. Totally worth every dollar!"</p>
+            <div>
+              <strong>Alex M.</strong>
+              <span style="display: block; font-size: 0.8rem; color: var(--text-light);">Business & Economics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       VIEW 2: SERVICES CATALOG PAGE
+       ========================================================================= -->
+  <main id="view-services" class="view-section" style="display: none;">
+    <section class="section services-section">
+      <div class="container">
+        <div class="section-header" style="margin-bottom: 2.5rem;">
+          <span class="section-subtitle">Catalog & Solutions</span>
+          <h1 class="section-title">All Available Student Services</h1>
+          <p class="section-desc">Select any service to review deliverables, pricing, and turnaround times, or click "Request Service" to start right away.</p>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="filter-bar">
+          <div class="category-pills" id="categoryFilters">
+            <button class="category-btn active" data-category="all">All Services</button>
+            <button class="category-btn" data-category="Academic">Academic</button>
+            <button class="category-btn" data-category="Coding & Tech">Coding & Tech</button>
+            <button class="category-btn" data-category="Design & Media">Design & Media</button>
+            <button class="category-btn" data-category="Tutoring">Tutoring</button>
+            <button class="category-btn" data-category="Career">Career</button>
+          </div>
+
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="serviceSearchInput" class="search-input" placeholder="Search services or topics..." />
+          </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="services-grid" id="servicesGrid">
+          <!-- Dynamically populated by app.js -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       VIEW 3: STUDENT REQUEST FORM
+       ========================================================================= -->
+  <main id="view-request" class="view-section" style="display: none;">
+    <section class="section" style="background: var(--bg-alt); padding: 3.5rem 0 5rem;">
+      <div class="container" style="max-width: 820px;">
+        <div class="section-header" style="margin-bottom: 2rem;">
+          <span class="section-subtitle">Fast & Confidential Submission</span>
+          <h1 class="section-title">Request a Student Service</h1>
+          <p class="section-desc">Fill in your requirements, deadline, and reference files below. We'll assign the ideal specialist immediately.</p>
+        </div>
+
+        <div class="table-card" id="requestFormContainer" style="padding: 2.25rem 2.5rem; background: white;">
+          <form id="studentRequestForm">
+            <!-- Student Information -->
+            <div style="margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border-light);">
+              <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                <span>👤</span> Student Information
+              </h3>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="reqStudentName">Full Name <span class="required">*</span></label>
+                  <input type="text" id="reqStudentName" class="form-control" placeholder="e.g. Alex Morgan" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="reqStudentEmail">Campus / Personal Email <span class="required">*</span></label>
+                  <input type="email" id="reqStudentEmail" class="form-control" placeholder="e.g. alex@campus.edu" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="reqStudentPhone">Phone Number / WhatsApp <span class="required">*</span></label>
+                  <input type="tel" id="reqStudentPhone" class="form-control" placeholder="e.g. +1 (555) 019-2834" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="reqUniversity">University / College Name</label>
+                  <input type="text" id="reqUniversity" class="form-control" placeholder="e.g. State University" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Service & Project Details -->
+            <div style="margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border-light);">
+              <h3 style="font-size: 1.15rem; margin-bottom: 1rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                <span>📋</span> Project Details & Service
+              </h3>
+
+              <div class="form-row">
+                <div class="form-group" style="flex: 2;">
+                  <label class="form-label" for="reqServiceSelect">Selected Service <span class="required">*</span></label>
+                  <select id="reqServiceSelect" class="form-control" required>
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label">Base Rate</label>
+                  <div id="reqSelectedPrice" style="font-family: var(--font-heading); font-size: 1.35rem; font-weight: 800; color: var(--primary); padding-top: 0.4rem;">
+                    $0.00
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="reqDeadline">Required Deadline <span class="required">*</span></label>
+                  <input type="datetime-local" id="reqDeadline" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="reqPriority">Priority Level</label>
+                  <select id="reqPriority" class="form-control">
+                    <option value="Normal">Normal (Standard Delivery)</option>
+                    <option value="High">High Priority</option>
+                    <option value="Urgent">Urgent (Express 24h)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="reqInstructions">Description & Specific Instructions <span class="required">*</span></label>
+                <textarea id="reqInstructions" class="form-control" rows="4" placeholder="Detail your assignment prompt, required programming stack, formatting guidelines (APA, IEEE, MLA), page count, or specific requirements..." required></textarea>
+              </div>
+            </div>
+
+            <!-- File Upload -->
+            <div style="margin-bottom: 2rem;">
+              <h3 style="font-size: 1.15rem; margin-bottom: 0.75rem; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                <span>📎</span> Attach Reference Files (Optional)
+              </h3>
+              
+              <div class="file-upload-box" id="reqFileDropBox">
+                <input type="file" id="reqFileInput" accept=".pdf,.doc,.docx,.zip,.png,.jpg,.jpeg,.txt,.ppt,.pptx" />
+                <div class="upload-icon">📂</div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Drag & drop your file here, or browse</h4>
+                <p style="font-size: 0.825rem; color: var(--text-muted);">Supports PDF, DOCX, ZIP, PPT, Images up to 25MB</p>
+              </div>
+
+              <div class="file-preview-card" id="filePreviewCard">
+                <div class="file-preview-info">
+                  <span style="font-size: 1.5rem;">📄</span>
+                  <div>
+                    <div class="file-preview-name" id="previewFileName">filename.pdf</div>
+                    <div class="file-preview-size" id="previewFileSize">1.2 MB</div>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline" id="removeFileBtn" style="color: #ef4444; border-color: #fecdd3;">
+                  ✕ Remove
+                </button>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+              <div style="font-size: 0.85rem; color: var(--text-muted);">
+                🔒 100% Secure & Confidential
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg" id="btnSubmitRequest">
+                Submit Service Request ➔
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       VIEW 4: STUDENT DASHBOARD (Track Requests)
+       ========================================================================= -->
+  <main id="view-student-dashboard" class="view-section" style="display: none;">
+    <section class="dashboard-section">
+      <div class="container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+          <div class="dashboard-title-area">
+            <h1>Student Request Dashboard</h1>
+            <p>Track your submitted orders, check mentor milestones, and download deliveries.</p>
+          </div>
+
+          <div class="track-search-bar">
+            <span>🔍</span>
+            <input type="text" id="studentTrackInput" placeholder="Enter Email or Request ID (e.g. REQ-2026-8812)..." />
+            <button class="btn btn-primary btn-sm" id="btnSearchTrack">Track</button>
+          </div>
+        </div>
+
+        <!-- Status Filter Tabs -->
+        <div class="status-filter-nav" id="studentStatusFilters">
+          <button class="status-tab-btn active" data-status="all">
+            All Requests <span class="count-badge">0</span>
+          </button>
+          <button class="status-tab-btn" data-status="pending">
+            Pending <span class="count-badge">0</span>
+          </button>
+          <button class="status-tab-btn" data-status="accepted">
+            Accepted <span class="count-badge">0</span>
+          </button>
+          <button class="status-tab-btn" data-status="in progress">
+            In Progress <span class="count-badge">0</span>
+          </button>
+          <button class="status-tab-btn" data-status="completed">
+            Completed <span class="count-badge">0</span>
+          </button>
+          <button class="status-tab-btn" data-status="cancelled">
+            Cancelled <span class="count-badge">0</span>
+          </button>
+        </div>
+
+        <!-- Requests List Container -->
+        <div class="requests-stack" id="studentRequestsContainer">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       VIEW 5: ADMIN LOGIN
+       ========================================================================= -->
+  <main id="view-admin-login" class="view-section" style="display: none;">
+    <section class="admin-login-wrap">
+      <div class="admin-login-card">
+        <div class="admin-login-header">
+          <div class="admin-login-icon">🛡️</div>
+          <h2 style="font-size: 1.65rem; margin-bottom: 0.35rem;">Admin Management Portal</h2>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">Secure access for service administrators & mentors</p>
+        </div>
+
+        <!-- Quick Demo Login Helper -->
+        <div class="quick-demo-banner">
+          <div class="quick-demo-text">
+            <strong>⚡ Instant Demo Access</strong>
+            <span>admin@campus.edu / admin123</span>
+          </div>
+          <button type="button" class="btn btn-sm btn-primary" id="btnDemoAdminLogin">
+            1-Click Login
+          </button>
+        </div>
+
+        <form id="adminLoginForm">
+          <div class="form-group">
+            <label class="form-label" for="adminEmail">Admin Email</label>
+            <input type="email" id="adminEmail" class="form-control" value="admin@campus.edu" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="adminPassword">Password</label>
+            <input type="password" id="adminPassword" class="form-control" value="admin123" required />
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.85rem;">
+            <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+              <input type="checkbox" id="adminRemember" checked />
+              <span>Remember session</span>
+            </label>
+            <span style="color: var(--primary);">Firebase Auth Protected</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem;">
+            Sign In to Dashboard ➔
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       VIEW 6: ADMIN DASHBOARD
+       ========================================================================= -->
+  <main id="view-admin-dashboard" class="view-section" style="display: none;">
+    <div class="admin-portal">
+      <!-- Admin Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="admin-profile-pill">
+          <div class="admin-avatar">A</div>
+          <div class="admin-profile-info">
+            <h4>Campus Admin</h4>
+            <span id="adminProfileEmail">admin@campus.edu</span>
+          </div>
+        </div>
+
+        <ul class="admin-nav-list" id="adminSidebarNav">
+          <li class="admin-nav-item active">
+            <button data-admin-tab="overview">
+              <span>📊</span> Overview & KPIs
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button data-admin-tab="requests">
+              <span>📦</span> Manage Requests
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button data-admin-tab="services">
+              <span>⚙️</span> Manage Services (CRUD)
+            </button>
+          </li>
+          <li class="admin-nav-item">
+            <button data-admin-tab="students">
+              <span>👥</span> Student Records
+            </button>
+          </li>
+        </ul>
+
+        <div style="padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+          <button class="btn btn-danger btn-sm" id="btnAdminLogout" style="width: 100%;">
+            🔒 Sign Out Admin
+          </button>
+        </div>
+      </aside>
+
+      <!-- Admin Main Content Area -->
+      <section class="admin-content">
+        <!-- Tab 1: Overview Pane -->
+        <div class="admin-tab-pane" id="admin-tab-overview">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.85rem; margin-bottom: 0.25rem;">Administrator Overview</h2>
+              <p style="color: var(--text-muted);">Real-time performance metrics and recent student orders.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnAdminAddServiceOverview" onclick="app.openServiceEditorModal()">
+              + Add New Service
+            </button>
+          </div>
+
+          <!-- KPI Metrics Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-data">
+                <h3 id="kpiTotalRequests">0</h3>
+                <p>Total Requests</p>
+              </div>
+              <div class="kpi-icon primary">📦</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-data">
+                <h3 id="kpiPendingRequests">0</h3>
+                <p>Pending Review</p>
+              </div>
+              <div class="kpi-icon amber">⏳</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-data">
+                <h3 id="kpiActiveRequests">0</h3>
+                <p>Active In Progress</p>
+              </div>
+              <div class="kpi-icon indigo">⚡</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-data">
+                <h3 id="kpiCompletedRequests">0</h3>
+                <p>Completed Orders</p>
+              </div>
+              <div class="kpi-icon emerald">✅</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-data">
+                <h3 id="kpiTotalRevenue">$0</h3>
+                <p>Total Revenue</p>
+              </div>
+              <div class="kpi-icon primary">💰</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-data">
+                <h3 id="kpiActiveServices">0</h3>
+                <p>Active Services</p>
+              </div>
+              <div class="kpi-icon indigo">📚</div>
+            </div>
+          </div>
+
+          <!-- Recent Requests Table -->
+          <div class="table-card">
+            <div class="table-header-bar">
+              <h3 style="font-size: 1.15rem;">Recent Student Requests</h3>
+              <button class="btn btn-outline btn-sm" onclick="app.switchAdminTab('requests')">
+                View All Requests ➔
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Request ID</th>
+                    <th>Student</th>
+                    <th>Service</th>
+                    <th>Deadline</th>
+                    <th>File</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminRecentRequestsBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: All Requests Management Pane -->
+        <div class="admin-tab-pane" id="admin-tab-requests" style="display: none;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.85rem; margin-bottom: 0.25rem;">Manage Student Requests</h2>
+              <p style="color: var(--text-muted);">Change order status, view student details, and review attachments.</p>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <select id="adminReqStatusFilter" class="form-control" style="width: auto; font-size: 0.88rem;">
+                <option value="all">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Accepted">Accepted</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <input type="text" id="adminReqSearchInput" class="form-control" placeholder="Search by name, ID, or service..." style="width: 240px; font-size: 0.88rem;" />
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Request ID</th>
+                    <th>Student Info</th>
+                    <th>Requested Service</th>
+                    <th>Deadline</th>
+                    <th>Attachment</th>
+                    <th>Status Selector</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminAllRequestsBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Services CRUD Pane -->
+        <div class="admin-tab-pane" id="admin-tab-services" style="display: none;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.85rem; margin-bottom: 0.25rem;">Manage Services Catalog</h2>
+              <p style="color: var(--text-muted);">Add, edit, delete, or update service pricing and descriptions.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnAdminAddService">
+              + Add New Service
+            </button>
+          </div>
+
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Thumbnail</th>
+                    <th>Service Name & Category</th>
+                    <th>Price</th>
+                    <th>Turnaround</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminServicesTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Student Records Pane -->
+        <div class="admin-tab-pane" id="admin-tab-students" style="display: none;">
+          <div style="margin-bottom: 2rem;">
+            <h2 style="font-size: 1.85rem; margin-bottom: 0.25rem;">Student Directory & History</h2>
+            <p style="color: var(--text-muted);">Directory of all students who have placed requests.</p>
+          </div>
+
+          <div class="table-card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>University</th>
+                    <th>Total Requests</th>
+                    <th>Total Value</th>
+                  </tr>
+                </thead>
+                <tbody id="adminStudentsTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       MODAL 1: REQUEST CONFIRMATION / SUCCESS
+       ========================================================================= -->
+  <div class="modal-overlay" id="requestSuccessModal">
+    <div class="modal-container" style="max-width: 520px; text-align: center;">
+      <div class="modal-body" style="padding: 2.5rem 2rem;">
+        <div style="width: 64px; height: 64px; background: var(--status-completed-bg); color: var(--status-completed-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.25rem;">
+          ✓
+        </div>
+        <h2 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Request Submitted!</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+          Your service order has been securely registered in the system.
+        </p>
+
+        <div style="background: var(--bg-alt); padding: 1.25rem; border-radius: var(--radius-lg); margin-bottom: 1.75rem; text-align: left;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span style="color: var(--text-light); font-size: 0.85rem;">Tracking ID:</span>
+            <strong id="successReqId" style="font-family: var(--font-mono); color: var(--primary);">REQ-2026-0000</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span style="color: var(--text-light); font-size: 0.85rem;">Student Name:</span>
+            <strong id="successStudentName">Alex</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span style="color: var(--text-light); font-size: 0.85rem;">Service:</span>
+            <span id="successServiceName" style="font-weight: 600; font-size: 0.88rem;">Academic Writing</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-light); font-size: 0.85rem;">Due Date:</span>
+            <span id="successDeadline" style="font-weight: 600; font-size: 0.88rem;">In 3 Days</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+          <button class="btn btn-primary" id="modalTrackBtn">
+            View on Student Dashboard ➔
+          </button>
+          <button class="btn btn-outline" data-modal-close>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: ADMIN ADD / EDIT SERVICE
+       ========================================================================= -->
+  <div class="modal-overlay" id="adminServiceModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="adminServiceModalTitle">Add New Service</h3>
+        <button class="modal-close-btn" data-modal-close>✕</button>
+      </div>
+      <form id="adminServiceForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+              <label class="form-label">Service Title <span class="required">*</span></label>
+              <input type="text" id="srvFormName" class="form-control" placeholder="e.g. Python Machine Learning Projects" required />
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label class="form-label">Category <span class="required">*</span></label>
+              <select id="srvFormCategory" class="form-control" required>
+                <option value="Academic">Academic</option>
+                <option value="Coding & Tech">Coding & Tech</option>
+                <option value="Design & Media">Design & Media</option>
+                <option value="Tutoring">Tutoring</option>
+                <option value="Career">Career</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Base Price ($ USD) <span class="required">*</span></label>
+              <input type="number" id="srvFormPrice" class="form-control" min="5" step="1" placeholder="45" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Turnaround Time <span class="required">*</span></label>
+              <input type="text" id="srvFormTurnaround" class="form-control" placeholder="e.g. 24-48 Hours" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Badge Label</label>
+              <input type="text" id="srvFormBadge" class="form-control" placeholder="e.g. Most Popular, Hot" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Image URL</label>
+            <input type="url" id="srvFormImageUrl" class="form-control" placeholder="https://images.unsplash.com/..." />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Service Description <span class="required">*</span></label>
+            <textarea id="srvFormDesc" class="form-control" rows="3" placeholder="Provide an engaging description of what the student will receive..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Key Features / Deliverables (One per line)</label>
+            <textarea id="srvFormFeatures" class="form-control" rows="3" placeholder="Grammar check&#10;Plagiarism audit&#10;Free revisions"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveService">Save Service</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: ADMIN REQUEST DETAILS & STATUS EDITOR
+       ========================================================================= -->
+  <div class="modal-overlay" id="adminRequestDetailModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Request Details</h3>
+          <span id="modalReqDetailId" style="font-family: var(--font-mono); color: var(--primary); font-size: 0.85rem;">REQ-2026-0000</span>
+        </div>
+        <button class="modal-close-btn" data-modal-close>✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; background: var(--bg-alt); padding: 1rem; border-radius: var(--radius-md);">
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase;">Student Name</div>
+            <strong id="modalDetailStudentName" style="font-size: 0.95rem;">-</strong>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase;">Email Address</div>
+            <span id="modalDetailStudentEmail" style="font-size: 0.9rem;">-</span>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase;">Phone / WhatsApp</div>
+            <span id="modalDetailStudentPhone" style="font-size: 0.9rem;">-</span>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase;">University</div>
+            <span id="modalDetailUniversity" style="font-size: 0.9rem;">-</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase;">Service</div>
+            <strong id="modalDetailServiceName" style="font-size: 0.95rem;">-</strong>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase;">Price</div>
+            <strong id="modalDetailPrice" style="color: var(--primary);">-</strong>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase;">Priority</div>
+            <span id="modalDetailPriority" class="badge badge-pill">-</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Student Instructions & Notes</label>
+          <div id="modalDetailInstructions" style="background: var(--bg-alt); padding: 0.85rem 1rem; border-radius: var(--radius-md); font-size: 0.9rem; min-height: 70px;">
+            -
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Uploaded File Attachment</label>
+          <div id="modalDetailFileArea">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--border-light); margin: 1.5rem 0;" />
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Update Request Status <span class="required">*</span></label>
+            <select id="modalDetailStatusSelect" class="form-control">
+              <option value="Pending">Pending</option>
+              <option value="Accepted">Accepted</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Required Deadline</label>
+            <div id="modalDetailDeadline" style="padding-top: 0.65rem; font-weight: 600; font-size: 0.9rem;">-</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Admin Internal / Feedback Notes</label>
+          <textarea id="modalDetailAdminNotes" class="form-control" rows="3" placeholder="Add notes for the student or internal mentor remarks..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-modal-close>Close</button>
+        <button type="button" class="btn btn-primary" id="btnModalSaveRequestDetails">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- =========================================================================
+       SITE FOOTER
+       ========================================================================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-logo" style="color: white;">
+            <div class="logo-icon">🎓</div>
+            <div class="logo-text">Edu<span>Serve</span></div>
+          </div>
+          <p>
+            Your comprehensive campus hub for academic paper editing, coding project support, design prototypes, and 1-on-1 STEM tutoring.
+          </p>
+          <div style="font-size: 0.85rem; color: #64748b;">
+            Built with ❤️ for students worldwide.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Services</h4>
+          <ul class="footer-links">
+            <li><a href="#services" data-navigate="services">Essay & Thesis Editing</a></li>
+            <li><a href="#services" data-navigate="services">Web & Software Projects</a></li>
+            <li><a href="#services" data-navigate="services">Data Science & Python</a></li>
+            <li><a href="#services" data-navigate="services">UI/UX Figma Design</a></li>
+            <li><a href="#services" data-navigate="services">Calculus & STEM Tutoring</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="#home" data-navigate="home">Home Page</a></li>
+            <li><a href="#services" data-navigate="services">Browse All Services</a></li>
+            <li><a href="#request" data-navigate="request">Submit a Request</a></li>
+            <li><a href="#student-dashboard" data-navigate="student-dashboard">Track Order Status</a></li>
+            <li><a href="#admin-login" data-navigate="admin-login">Admin Portal</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Student Guarantee</h4>
+          <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6; margin-bottom: 1rem;">
+            ✓ 100% Confidential & Secure<br />
+            ✓ Free 7-Day Revisions<br />
+            ✓ On-Time Delivery Pledge
+          </p>
+          <div class="badge badge-pill" style="background: rgba(255, 255, 255, 0.1); color: white; border-color: rgba(255, 255, 255, 0.2);">
+            Firebase Storage & Firestore Ready
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 EduServe Student Services. All rights reserved.
+        </div>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="#home" data-navigate="home">Privacy Policy</a>
+          <a href="#home" data-navigate="home">Terms of Service</a>
+          <a href="#admin-login" data-navigate="admin-login">Admin Access</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Scripts (Loaded in dependency order) -->
+  <script src="js/seed-data.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
